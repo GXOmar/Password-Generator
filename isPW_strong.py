@@ -1,4 +1,4 @@
-
+#! python3
 # This Program is a text based experience to Generate a Random password for the user.
 # and also to ask the user to enter a password to check if it's strong or not.
 
