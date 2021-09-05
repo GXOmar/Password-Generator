@@ -84,15 +84,15 @@ def GeneratePW(length, PW_strength):
 
 def explain(PWstr):
     '''This Function will check what character type is missing in the password, return what's missing'''
-    li = ['lowe case', 'upper case', 'digit', 'symbol']
+    li = ['an uppercase', 'a lowercase', 'a digit', 'a symbol']
     for char in PWstr:
-        li[0] = None if char.islower() else li[0]
-        li[1] = None if char.isupper() else li[1]
+        li[0] = None if char.isupper() else li[0]
+        li[1] = None if char.islower() else li[1]
         li[2] = None if char.isdigit() else li[2]
         li[3] = None if char in '!?@#$%^&*' else li[3]
     
     li = [item for item in li if item != None]
-    return ', '.join(li[:-1]) + ' and ' + li[-1] if len(li) > 1 else li[0]
+    return f"{', '.join(li[:-1])} and {li[-1]}" if len(li) > 1 else f"{li[0]} character"
 
 def unwanted_ch_list(PWstr): 
     '''this function is to detect if PW has unwanted characters, return True if so'''
@@ -126,10 +126,10 @@ def checkPW(user_passwrod):
             return f"{colorama.Fore.GREEN}your password '{user_passwrod}' is strong"
 
         else:          
-            return f"{colorama.Fore.RED}your password '{user_passwrod}' is NOT strong\nbecause it's missing {colorama.Fore.MAGENTA}{explain(user_passwrod)}."
+            return f"{colorama.Fore.RED}Your Password is NOT strong, it's missing {colorama.Fore.MAGENTA}{explain(user_passwrod)}."
 
     else:
-        return f"{colorama.Fore.YELLOW}No password detected"
+        return f"{colorama.Fore.YELLOW}No Password detected"
 
 
 user_input = input(f"{colorama.Fore.CYAN}please enter the password you want to check\n\
