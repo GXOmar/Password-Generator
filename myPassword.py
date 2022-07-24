@@ -147,8 +147,7 @@ def main():
                 random_generated_password = GeneratePW(int(sys.argv[2]), 'very strong')
                 pyperclip.copy(random_generated_password)
                 print(f"{colorama.Fore.GREEN}Password copied!")
-            except (ValueError, IndexError) as e:
-                print(e)
+            except (ValueError, IndexError):
                 random_generated_password = GeneratePW(20, 'very strong')
                 pyperclip.copy(random_generated_password)
                 print(f"{colorama.Fore.GREEN}Password copied!")
