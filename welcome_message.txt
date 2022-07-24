@@ -1,0 +1,20 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                             ~ Welcome ~                             ┃
+┃*********************************************************************┃
+┃                                                                     ┃
+┃                            myPassword.py                            ┃
+┃                                                                     ┃
+┃                 ~ Password generator and validator ~                ┃
+┃                                                                     ┃
+┃    USAGE: py myPassword.py <command_keyword>                        ┃
+┃                                                                     ┃
+┃    <command_keyword> include:                                       ┃
+┃                                                                     ┃
+┃ 1- 'gen': Generate a strong, 20 characters long (this is default)   ┃
+┃    • optional argument for password length.                         ┃
+┃       example: py myPassword.py gen 77                              ┃
+┃                                                                     ┃
+┃ 2- 'check': Validate if the password strong or not.                 ┃
+┃     user will be prompt to enter the password.                      ┃
+┃                                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
