@@ -10,6 +10,7 @@
 # 5 >>> at least 1 symbol
 
 import re
+import sys
 import string
 import random
 import secrets
@@ -37,6 +38,7 @@ StrongPW = re.compile(r'''^
 # TODO: implement a GUI for this program 
 # TODO: make a strength bar to indecate the PW strength insted of "(weak, medium, strong or very strong)".
 # TODO: let the user choice one or multiple character types to generate a PW around it e.g. only symbols
+# TODO: find the unwanted character and point it out.
 
 # sequence of characters for the random password
 lower_case, upper_case = string.ascii_lowercase, string.ascii_uppercase
@@ -56,7 +58,7 @@ Random_character_values = {
     # 'symbols' : R_symbols
 }
 
-# ask the user for the password strength (weak, medium, strong or vere strong)
+# ask the user for the password strength (weak, medium, strong or very strong)
 # each key(string) is an optional user input that represent PW strength(category of character), strong by default.
 PWstrength_chars = {
     'weak': lower_case,
@@ -68,14 +70,14 @@ PWstrength_chars = {
     
 def GeneratePW(length, PW_strength):
     '''this function will generate a random password and return it'''
-    # length of PW should not be < 4
-    if length <= 6:
+    # error handling: length of PW should not be < 8
+    if length < 8: 
         length = 8
     # First generate length-Random_sequence of characters in a list minus the length of guaranteed Random characters. 
     # e.g. 12 - 4(R_all) = 8 so will generate 8 random character.
     Random_PW = [secrets.choice(PWstrength_chars[PW_strength]) for _ in range(0, length - len(Random_character_values[PW_strength]))]
-    # we add the guaranteed Random characters so we make sure the randomly genarated PW include what the user asked for.
-    # e.g. add the last 4(from R_all) remaning character so we get 12 character back.
+    # we add the guaranteed Random characters so we make sure the randomly generated PW include what the user asked for.
+    # e.g. add the last 4(from R_all) remaining character so we get 12 character back.
     Random_PW.extend(Random_character_values[PW_strength])
     # shuffle the list so the added Random_characters don't stay in order.
     random.shuffle(Random_PW)
@@ -83,7 +85,7 @@ def GeneratePW(length, PW_strength):
 
 
 def explain(PWstr):
-    '''This Function will check what character type is missing in the password, return what's missing'''
+    '''Check what type of characters is missing from the password, return missing category(s)'''
     li = ['an uppercase', 'a lowercase', 'a digit', 'a symbol']
     for char in PWstr:
         li[0] = None if char.isupper() else li[0]
@@ -95,57 +97,66 @@ def explain(PWstr):
     return f"{', '.join(li[:-1])} and {li[-1]}" if len(li) > 1 else f"{li[0]} character"
 
 def unwanted_ch_list(PWstr): 
-    '''this function is to detect if PW has unwanted characters, return True if so'''
+    '''Detect if PW has unwanted characters, return True if so'''
     matched_list = [character in '\[\]():;,~.`\'\"/+=\\-_<>}{' for character in PWstr]   
     if any(matched_list): # if one unwanted char found in PW, PW is invalid
         return True
     return False
 
-def checkPW(user_passwrod):
-    '''This function is to check the PW strong or not and return the final output'''
+def checkPW(user_password):
+    'check if the password is strong or not, return a message about the password'
     # detect if Pw
-    PW = detectPW.search(user_passwrod)
+    PW = detectPW.search(user_password)
     if PW != None: # means it return a 'PW' match
 
         # search for Strong PW
         SPW = StrongPW.search(PW.group())
 
         # check for unwanted characters in PW
-        if unwanted_ch_list(user_passwrod):
-            return f"{colorama.Fore.RESET}Your password {colorama.Fore.YELLOW}\"{user_passwrod}\"{colorama.Fore.RESET} contains unwanted characters"
+        if unwanted_ch_list(user_password):
+            print(f"{colorama.Fore.RESET}Your password {colorama.Fore.YELLOW}\"{user_password}\"{colorama.Fore.RESET} contains unwanted characters")
+            return False
 
         # check the length of PW 
-        elif len(user_passwrod) <= 6:
-            return f'{colorama.Fore.LIGHTYELLOW_EX}your password is too short!'
+        elif len(user_password) <= 6:
+            print(f'{colorama.Fore.LIGHTYELLOW_EX}Your password is too short!')
+            return False
 
         # check if PW is strong
         elif SPW != None: # return a 'strong PW' match
             # hidePW = re.sub(StrongPW, SPW.group().replace(SPW.group()[:-5], len(SPW.group()[:-5]) * '*'), SPW.group()) # LOL
-            pyperclip.copy(user_passwrod)
-            print(f'{colorama.Fore.GREEN}Copied to Clipboard')
-            return f"{colorama.Fore.GREEN}your password '{user_passwrod}' is strong"
+            print(f"{colorama.Fore.GREEN}Your password '{user_password}' is strong")
+            return True
 
         else:          
-            return f"{colorama.Fore.RED}Your Password is NOT strong, it's missing {colorama.Fore.MAGENTA}{explain(user_passwrod)}."
+            print(f"{colorama.Fore.RED}Your Password is NOT strong, it's missing {colorama.Fore.MAGENTA}{explain(user_password)}.")
+            return False
 
-    else:
-        return f"{colorama.Fore.YELLOW}No Password detected"
+def main():
+    # add welcome screen with instructions on how to use the script
+    command_keywords = ('gen', 'check')
+    if len(sys.argv) == 1 or sys.argv[1] not in command_keywords:
+        welcome_message = open('.\welcome_message.txt', 'r').read()
+        print(welcome_message)
 
+    elif len(sys.argv) >= 2:
+        if sys.argv[1] == 'gen':
+        # generate a very strong random password with the 'gen' command with default length of 20 characters
+            try:
+                # user supplied a password length!
+                random_generated_password = GeneratePW(int(sys.argv[2]), 'very strong')
+                pyperclip.copy(random_generated_password)
+                print(f"{colorama.Fore.GREEN}Password copied!")
+            except (ValueError, IndexError) as e:
+                print(e)
+                random_generated_password = GeneratePW(20, 'very strong')
+                pyperclip.copy(random_generated_password)
+                print(f"{colorama.Fore.GREEN}Password copied!")
 
-user_input = input(f"{colorama.Fore.CYAN}please enter the password you want to check\n\
-or type 'g' to generate a random password:{colorama.Fore.LIGHTMAGENTA_EX} ")
+        # check the strength of the prompted password
+        elif sys.argv[1] == 'check':
+            user_password = input('Enter your password: ')
+            checkPW(user_password)
 
-if user_input != 'g':
-    print(checkPW(user_input))
-
-else:
-    print(''.center(50, '-'))
-    userPW_length = int(input(f'{colorama.Fore.LIGHTYELLOW_EX}Enter the length of the password, 8 by default:{colorama.Fore.WHITE} ') or 8)
-    userPW_strength = input(f'{colorama.Fore.LIGHTYELLOW_EX}choice the strength of the password\n(weak, medium, strong or very strong) strong by default:{colorama.Fore.WHITE} ') or 'strong'
-    GPW = GeneratePW(userPW_length, userPW_strength)
-    if userPW_strength == 'very strong':
-        pyperclip.copy(GPW)
-        print(f"{colorama.Fore.GREEN}'{GPW}' Copied to Clipboard ")
-
-    else:
-        print(f"Your password is '{GPW}'")
+if __name__ == '__main__':
+    main()
