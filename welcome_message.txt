@@ -10,11 +10,11 @@
 ┃                                                                     ┃
 ┃    <command_keyword> include:                                       ┃
 ┃                                                                     ┃
-┃ 1- 'gen': Generate a strong, 20 characters long (this is default)   ┃
+┃ 1- "gen": Generate a strong password, 20 characters long (default)  ┃
 ┃    • optional argument for password length.                         ┃
 ┃       example: py myPassword.py gen 77                              ┃
 ┃                                                                     ┃
-┃ 2- 'check': Validate if the password strong or not.                 ┃
+┃ 2- "check": Validate if the password is strong or not.              ┃
 ┃     user will be prompt to enter the password.                      ┃
 ┃                                                                     ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
