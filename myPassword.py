@@ -141,8 +141,8 @@ def check_password(user_password: str):
             print(f"{colorama.Fore.RED}Your Password is NOT strong, it's missing {colorama.Fore.MAGENTA}{explain(user_password)}.")
             return False
 
-    # TODO: handle no password detection
-
+    else: 
+        print(f"{colorama.Fore.BLUE}No password detected")
 
 def main():
     COMMAND_KEYWORDS = ("gen", "check")
