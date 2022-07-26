@@ -96,23 +96,35 @@ def explain(password_str: str) -> str:
     return f"{', '.join(li[:-1])} and {li[-1]}" if len(li) > 1 else f"{li[0]} character"
 
 
-def unwanted_chr_in_password(password_str: str) -> bool: 
+def unwanted_chr_in_password(password_str: str): 
     """Detect if the password has unwanted characters, return True if so"""
-    matched_list = [character in "\[\]():;,~.`\'\"/+=\\-_<>}{" for character in password_str]   
-    if any(matched_list):  # if one unwanted character is found in the password, the password is invalid
-        return True
-    return False
+    for unwanted_character in password_str:
+        if unwanted_character in "\[\]():;,~.`\'\"/+=\\-_<>}{":  # unwanted character string
+            # when the first unwanted character occurs, the password is invalid.
+            return unwanted_character  # this act like a True value.
+    return False  # password check passed.
 
 
-def check_password(user_password):
+def point_on_unwanted_chr(password_str: str, unwanted_character: str) -> None:
+    """Find and point the unwanted character on the password"""
+    unwanted_chr_leading_position = password_str.split(unwanted_character)[0]  # return the string before the unwanted character
+    two_char_filler = "--"  # compensating the 2 quote characters surrounding the user_password string in the final message.
+    pointer_character = " " * len("Your password" + two_char_filler +  unwanted_chr_leading_position) + "^"  # "^" pointer character
+    print(pointer_character)
+    return None
+
+
+def check_password(user_password: str):
     """Check if the password is strong or not, return a message about the password"""
     # detect for a password sequence
     PASSWORD_SEQUENCE = detect_password.search(user_password)
     if PASSWORD_SEQUENCE != None:
 
         # check for unwanted characters in PASSWORD_SEQUENCE
-        if unwanted_chr_in_password(user_password):
+        unwanted_chr = unwanted_chr_in_password(user_password)
+        if unwanted_chr:
             print(f"{colorama.Fore.RESET}Your password {colorama.Fore.YELLOW}\"{user_password}\"{colorama.Fore.RESET} contains unwanted characters")
+            point_on_unwanted_chr(user_password, unwanted_chr)
             return False
 
         # check the length of PASSWORD_SEQUENCE 
