@@ -17,11 +17,9 @@
 
 import re
 import sys
-import string
-import random
-import secrets
 import colorama
 import pyperclip
+import generate_password
 
 # A regex to detect string sequences.
 detect_password = re.compile(r'\S+')
@@ -34,53 +32,6 @@ detect_strong_password = re.compile(r"""^
 (?=.*[!?@#$%^&*])                    # at least 1 symbol
 # (?!.*[\[\]():;,~.`'"/+=\\-_<>{}])  # make sure the password doesn't include these characters
 \S{8,}$""", re.VERBOSE)
-
-# sequence of characters to generate a random password
-LOWERCASE_CHARACTERS = string.ascii_lowercase
-UPPERCASE_CHARACTERS = string.ascii_uppercase
-DIGITS = string.digits
-SYMBOLS = "!?@#$%^&*"
-ALL_CHARACTERS = LOWERCASE_CHARACTERS + UPPERCASE_CHARACTERS + DIGITS + SYMBOLS
-
-# guaranteed at least one character from each category when generating a random password.
-# this eliminates the randomness of NOT having at least one of each character.
-guarantee_lowercase = secrets.choice(LOWERCASE_CHARACTERS)
-guarantee_uppercase = secrets.choice(UPPERCASE_CHARACTERS)
-guarantee_digit = secrets.choice(DIGITS)
-guarantee_symbols = secrets.choice(SYMBOLS) 
-guarantee_all = guarantee_lowercase + guarantee_uppercase + guarantee_digit + guarantee_symbols  # equal to 4 character
-
-# guaranteed Random characters
-Random_character_values = {
-    "weak": guarantee_lowercase,
-    "medium": guarantee_lowercase + guarantee_uppercase,
-    "strong": guarantee_lowercase + guarantee_uppercase + guarantee_digit,
-    "very strong": guarantee_all
-}
-
-# ask the user for the password strength (weak, medium, strong or very strong)
-# each key(string) is an optional user input that represents PW strength(category of character), strong by default.
-PWstrength_chars = {
-    "weak": LOWERCASE_CHARACTERS,
-    "medium": LOWERCASE_CHARACTERS + UPPERCASE_CHARACTERS,
-    "strong": LOWERCASE_CHARACTERS + UPPERCASE_CHARACTERS + DIGITS, 
-    "very strong": ALL_CHARACTERS
-} 
-    
-def generate_random_password(length: int, pw_strength: str) -> str:
-    """Generate a random password"""
-    # error handling: length of PW should not be < 8
-    if length < 8: 
-        length = 8
-    # First generate length-Random_sequence of characters in a list minus the length of guaranteed Random characters. 
-    # e.g. 12 - 4(R_all) = 8 so will generate 8 random character.
-    Random_PW = [secrets.choice(PWstrength_chars[pw_strength]) for _ in range(0, length - len(Random_character_values[pw_strength]))]
-    # we add the guaranteed Random characters so we make sure the randomly generated PW include what the user asked for.
-    # e.g. add the last 4(from R_all) remaining character so we get 12 character back.
-    Random_PW.extend(Random_character_values[pw_strength])
-    # shuffle the list so the added Random_characters don't stay in order.
-    random.shuffle(Random_PW)
-    return ''.join(Random_PW)
 
 
 def explain(password_str: str) -> str:
@@ -144,6 +95,7 @@ def check_password(user_password: str):
     else: 
         print(f"{colorama.Fore.BLUE}No password detected")
 
+
 def main():
     COMMAND_KEYWORDS = ("gen", "check")
     if len(sys.argv) == 1 or sys.argv[1] not in COMMAND_KEYWORDS:
@@ -156,11 +108,11 @@ def main():
         # generate a very strong random password with the "gen" command with a default length of 20 characters.
             try:
                 # user supplied a password length!
-                random_generated_password = generate_random_password(int(sys.argv[2]), "very strong")
+                random_generated_password = generate_password.generate_random_password(int(sys.argv[2]))
                 pyperclip.copy(random_generated_password)
                 print(f"{colorama.Fore.GREEN}Password copied!")
             except (ValueError, IndexError):
-                random_generated_password = generate_random_password(20, "very strong")
+                random_generated_password = generate_password.generate_random_password(20)
                 pyperclip.copy(random_generated_password)
                 print(f"{colorama.Fore.GREEN}Password copied!")
 
