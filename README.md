@@ -1,28 +1,46 @@
-# ***isPW_strong***
-This Program is a text based (CLI) experience to Generate a Random password for the user.<br>
-It could also check if the password is strong or not from a user input.<br>
+# **myPassword.py**
 
-This is the first program "as a Beginner" that i did. 
-I was following an amazing book by **Al Sweigart** called **"AUTOMATE THE BORING STUFF WITH PYTHON"** Chapter 7: Pattern Matching with Regular Expressions. _page 171_<br>
-he asked to write a program for Strong Password Detection and the idea was to use Regex pattern to check the password contain the following:
-* at least 8 characters long.
-* at least 1 upper case letter.
-* at least 1 lower case letter.
-* at least 1 digit.
-* at least 1 symbol.
+Password generator and validator
 
-#### It was a simple task but it took me a while to figure out how "Look around" mechanism work in regex.<br>
-Thanks to this [Regex Debugger tool](https://regex101.com/) that showed me how the mechanism work step by step.<br> 
-*"it was at that moment I knew, it makes sense" :sweat_smile:*<br>
+This program is a text-based experience to generate a random password for the user, and validate a password from user input.
 
-## The program was just to check if the password strong or not.<br>
-### what inspired me to keep developing it and make it my first project is [LastPass](https://www.lastpass.com/) Generate Secure Password tab in the [chrome extension](https://chrome.google.com/webstore/detail/lastpass-free-password-ma/hdokiejnpimakedhajhdlcegeplioahd?utm_source=chrome-ntp-icon).
-which I'll keep developing this program to somewhat match the chrome extension.<br>
-**___________________________________________________________________**<br>
-_Also_, I don't know what kind of symbols allowed in a password, so i only allowed the following symbols 
-  * **!?@#$%^&\***
-  
-_"Various operating systems and applications may apply limitations to this set"_ >>> **!"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~**<br>
-e.g. windows 7 doesn't allow **"\\/:*?"<>|"** these characters when renaming a folder or file 
+Usage: `py myPassword.py <command_keyword>`
 
-**any ideas or advice are more than welcome** :hugs: 
+`<command_keyword>` includes:
+
+* "gen": Generate a strong password, 20 characters long (default)
+  * optional argument for password length. example: py myPassword.py gen 77
+
+* "check": Validate if the password is strong or not, user will be prompt to enter the password.  
+
+___
+
+###### This is the first program that I wrote. ^_^
+
+I was following an amazing book by **Al Sweigart** called **"AUTOMATE THE BORING STUFF WITH PYTHON"** Chapter 7: Pattern Matching with Regular Expressions. page 171
+
+He asked to write a program for strong password detection and the idea was to use Regex pattern to check the password contains the following:
+
+* At least 8 characters long.
+* At least 1 uppercase character.
+* At least 1 lowercase character.
+* At least 1 digit.
+* At least 1 symbol.
+
+The program was just to check if the password strong or not
+
+### what inspired me to keep developing it is the [LastPass...](https://www.lastpass.com/) Generate Secure Password tab in the [chrome extension](https://chrome.google.com/webstore/detail/lastpass-free-password-ma/hdokiejnpimakedhajhdlcegeplioahd?utm_source=chrome-ntp-icon)
+
+___
+
+Note: I only allowed the following symbols in the password generating/checking process:
+
+* **!?@#$%^&\***
+
+Various operating systems and applications may apply limitations to what kind of symbols they might want to use, so i choose to not have these symbols when generating/checking the password.
+
+* **\[ \]\( \):;,~.`\'\"/+=\\-_<>{ }**
+
+e.g. Windows 10 doesn't allow these characters **"\\/:*?"<>|"** when renaming a folder or a file.
+
+**any ideas or advice are more than welcome** :hugs:
